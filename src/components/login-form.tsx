@@ -72,9 +72,9 @@ export function LoginForm() {
         </Button>
 
         <p className="mt-5 text-sm text-center">
-          Already have an account?
-          <Link href="#" className="ml-1 underline text-muted-foreground">
-            Log in
+          Don't you have an account?
+          <Link href="/signup" className="ml-1 underline text-muted-foreground">
+            Sign up
           </Link>
         </p>
       </div>
