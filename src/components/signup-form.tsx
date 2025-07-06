@@ -38,6 +38,8 @@ export function SignUpForm() {
                     type="text"
                     placeholder="Full Name"
                     className="w-full text-sm"
+                    required
+                    maxLength={15}
                 />
             </div>
             <div className="space-y-2">
@@ -48,6 +50,7 @@ export function SignUpForm() {
                     type="email"
                     placeholder="Email"
                     className="w-full text-sm"
+                    required
                 />
             </div>
             <div className="space-y-2">
@@ -58,6 +61,8 @@ export function SignUpForm() {
                     type="password"
                     placeholder="Password"
                     className="w-full text-sm"
+                    required
+                    minLength={8}
                 />
             </div>
             <Button 

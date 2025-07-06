@@ -11,7 +11,7 @@ import { loginUser } from "@/lib/actions/auth-actions";
 import { Code } from "lucide-react";
 
 
-export function SignUpForm() {
+export function LoginForm() {
   const initialState = {
     errorMessage: ""
   }
@@ -38,6 +38,7 @@ export function SignUpForm() {
                     type="email"
                     placeholder="Email"
                     className="w-full text-sm"
+                    required
                 />
             </div>
             <div className="space-y-2">
@@ -48,6 +49,8 @@ export function SignUpForm() {
                     type="password"
                     placeholder="Password"
                     className="w-full text-sm"
+                    required
+                    minLength={8}
                 />
             </div>
             <Button 
