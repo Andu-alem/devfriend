@@ -11,7 +11,7 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-background">
       <AppSidebar />
       <TopBar />
-      <main className="ml-64 mt-16 p-6 min-h-[calc(100vh-4rem)] overflow-x-hidden">
+      <main className="ml-0 md:ml-64 mt-16 p-4 md:p-6 min-h-[calc(100vh-4rem)] overflow-x-hidden">
         <div className="max-w-full">{children}</div>
       </main>
     </div>
