@@ -1,98 +1,191 @@
 "use client"
 
-import { Plus, Briefcase, FolderOpen, Calendar, TrendingUp } from "lucide-react"
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { AddJobDialog } from "@/components/add-job-dialog"
+import { AddProjectDialog } from "@/components/add-project-dialog"
+import { AddEventDialog } from "@/components/add-event-dialog"
+import { Briefcase, Code, Calendar, TrendingUp, Plus, Clock, CheckCircle, AlertCircle, Users } from "lucide-react"
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
-const jobStatusData = [
-  { name: "Saved", value: 12, color: "hsl(var(--chart-1))" },
-  { name: "Applied", value: 8, color: "hsl(var(--chart-2))" },
-  { name: "Interviewing", value: 3, color: "hsl(var(--chart-3))" },
-  { name: "Offer", value: 1, color: "hsl(var(--chart-4))" },
-  { name: "Rejected", value: 5, color: "hsl(var(--chart-5))" },
-]
+export default function DashboardPage() {
+  const [jobs, setJobs] = useState([
+    { id: 1, title: "Frontend Developer", company: "Google", status: "applied" },
+    { id: 2, title: "Full Stack Engineer", company: "Meta", status: "interviewing" },
+  ])
 
-const projectStatusData = [
-  { name: "Idea", count: 4 },
-  { name: "In Progress", count: 6 },
-  { name: "Completed", count: 8 },
-  { name: "Deployed", count: 3 },
-]
+  const [projects, setProjects] = useState([
+    { id: 1, title: "E-commerce Dashboard", status: "in-progress" },
+    { id: 2, title: "Task Manager", status: "completed" },
+  ])
 
-const upcomingItems = [
-  { type: "interview", title: "Frontend Developer at TechCorp", date: "Today, 2:00 PM" },
-  { type: "deadline", title: "E-commerce App - MVP", date: "Tomorrow" },
-  { type: "followup", title: "Follow up with StartupXYZ", date: "Dec 15" },
-]
+  const [events, setEvents] = useState([
+    {
+      id: 1,
+      title: "Technical Interview - Google",
+      date: "Today, 2:00 PM",
+      type: "interview",
+      priority: "high",
+    },
+    {
+      id: 2,
+      title: "Follow up - Microsoft",
+      date: "Tomorrow, 10:00 AM",
+      type: "followup",
+      priority: "medium",
+    },
+  ])
 
-export default function Dashboard() {
+  const stats = [
+    {
+      title: "Total Applications",
+      value: jobs.length.toString(),
+      change: "+12%",
+      icon: <Briefcase className="h-4 w-4" />,
+      color: "text-blue-600",
+    },
+    {
+      title: "Active Projects",
+      value: projects.length.toString(),
+      change: "+3",
+      icon: <Code className="h-4 w-4" />,
+      color: "text-green-600",
+    },
+    {
+      title: "Interviews",
+      value: events.filter((e) => e.type === "interview").length.toString(),
+      change: "+2",
+      icon: <Users className="h-4 w-4" />,
+      color: "text-purple-600",
+    },
+    {
+      title: "Success Rate",
+      value: "68%",
+      change: "+5%",
+      icon: <TrendingUp className="h-4 w-4" />,
+      color: "text-orange-600",
+    },
+  ]
+
+  const jobStatusData = [
+    { name: "Applied", value: jobs.filter((j) => j.status === "applied").length, color: "#3b82f6" },
+    { name: "Interviewing", value: jobs.filter((j) => j.status === "interviewing").length, color: "#8b5cf6" },
+    { name: "Offer", value: jobs.filter((j) => j.status === "offer").length, color: "#10b981" },
+    { name: "Rejected", value: jobs.filter((j) => j.status === "rejected").length, color: "#ef4444" },
+  ]
+
+  const projectStatusData = [
+    { name: "Idea", count: projects.filter((p) => p.status === "idea").length },
+    { name: "In Progress", count: projects.filter((p) => p.status === "in-progress").length },
+    { name: "Completed", count: projects.filter((p) => p.status === "completed").length },
+    { name: "Deployed", count: projects.filter((p) => p.status === "deployed").length },
+  ]
+
+  const recentActivity = [
+    {
+      action: "Applied to Frontend Developer at Stripe",
+      time: "2 hours ago",
+      type: "application",
+    },
+    {
+      action: "Completed React Dashboard project",
+      time: "1 day ago",
+      type: "project",
+    },
+    {
+      action: "Interview scheduled with Meta",
+      time: "2 days ago",
+      type: "interview",
+    },
+    {
+      action: "Updated portfolio website",
+      time: "3 days ago",
+      type: "project",
+    },
+  ]
+
+  const handleJobAdded = (newJob: any) => {
+    setJobs((prev) => [...prev, newJob])
+  }
+
+  const handleProjectAdded = (newProject: any) => {
+    setProjects((prev) => [...prev, newProject])
+  }
+
+  const handleEventAdded = (newEvent: any) => {
+    setEvents((prev) => [...prev, newEvent])
+  }
+
+  const getEventIcon = (type: string) => {
+    switch (type) {
+      case "interview":
+        return <Users className="h-4 w-4" />
+      case "followup":
+        return <Clock className="h-4 w-4" />
+      case "deadline":
+        return <AlertCircle className="h-4 w-4" />
+      default:
+        return <CheckCircle className="h-4 w-4" />
+    }
+  }
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "border-l-red-500 bg-red-50 dark:bg-red-950/20"
+      case "medium":
+        return "border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/20"
+      default:
+        return "border-l-green-500 bg-green-50 dark:bg-green-950/20"
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's your development journey overview.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">Welcome back! Here's your developer journey overview.</p>
         </div>
-        <div className="flex gap-2">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Job
-          </Button>
-          <Button variant="outline">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Project
-          </Button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <AddJobDialog onJobAdded={handleJobAdded}>
+            <Button className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Job
+            </Button>
+          </AddJobDialog>
+          <AddProjectDialog onProjectAdded={handleProjectAdded}>
+            <Button variant="outline" className="w-full sm:w-auto bg-transparent">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Project
+            </Button>
+          </AddProjectDialog>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Applications</CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">29</div>
-            <p className="text-xs text-muted-foreground">+3 from last week</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-            <FolderOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">6</div>
-            <p className="text-xs text-muted-foreground">2 nearing completion</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Interviews</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">This week</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12%</div>
-            <p className="text-xs text-muted-foreground">+2% from last month</p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat, index) => (
+          <Card key={index} className="card-hover">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+              <div className={stat.color}>{stat.icon}</div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600">{stat.change}</span> from last month
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Job Applications Chart */}
         <Card>
           <CardHeader>
@@ -100,16 +193,7 @@ export default function Dashboard() {
             <CardDescription>Current status of your job applications</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                saved: { label: "Saved", color: "hsl(var(--chart-1))" },
-                applied: { label: "Applied", color: "hsl(var(--chart-2))" },
-                interviewing: { label: "Interviewing", color: "hsl(var(--chart-3))" },
-                offer: { label: "Offer", color: "hsl(var(--chart-4))" },
-                rejected: { label: "Rejected", color: "hsl(var(--chart-5))" },
-              }}
-              className="h-[200px]"
-            >
+            <div className="h-[200px] sm:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -125,10 +209,20 @@ export default function Dashboard() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </ChartContainer>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {jobStatusData.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
+                  <span className="text-sm">
+                    {item.name}: {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
@@ -136,65 +230,87 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Project Status</CardTitle>
-            <CardDescription>Overview of your project pipeline</CardDescription>
+            <CardDescription>Overview of your project progress</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                count: { label: "Projects", color: "hsl(var(--chart-1))" },
-              }}
-              className="h-[200px]"
-            >
+            <div className="h-[200px] sm:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={projectStatusData}>
+                  <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Bar dataKey="count" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>
-            </ChartContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Upcoming Items */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Upcoming</CardTitle>
-          <CardDescription>Your upcoming interviews, deadlines, and reminders</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {upcomingItems.map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg border">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      item.type === "interview"
-                        ? "bg-blue-500"
-                        : item.type === "deadline"
-                          ? "bg-red-500"
-                          : "bg-yellow-500"
-                    }`}
-                  />
-                  <div>
-                    <p className="font-medium">{item.title}</p>
-                    <p className="text-sm text-muted-foreground">{item.date}</p>
+      {/* Bottom Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Upcoming Events */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Upcoming Events
+                </CardTitle>
+                <CardDescription>Your schedule for the next few days</CardDescription>
+              </div>
+              <AddEventDialog onEventAdded={handleEventAdded}>
+                <Button variant="outline" size="sm" className="bg-transparent">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Event
+                </Button>
+              </AddEventDialog>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {events.map((event, index) => (
+              <div key={index} className={`p-3 rounded-lg border-l-4 ${getPriorityColor(event.priority)}`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5">{getEventIcon(event.type)}</div>
+                    <div>
+                      <p className="font-medium text-sm">{event.title}</p>
+                      <p className="text-xs text-muted-foreground">{event.date}</p>
+                    </div>
                   </div>
+                  <Badge variant="outline" className="text-xs">
+                    {event.type}
+                  </Badge>
                 </div>
-                <Badge
-                  variant={
-                    item.type === "interview" ? "default" : item.type === "deadline" ? "destructive" : "secondary"
-                  }
-                >
-                  {item.type}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Recent Activity */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>Your latest actions and updates</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {recentActivity.map((activity, index) => (
+              <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <div className="w-2 h-2 rounded-full bg-primary mt-2" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{activity.action}</p>
+                  <p className="text-xs text-muted-foreground">{activity.time}</p>
+                </div>
+                <Badge variant="secondary" className="text-xs">
+                  {activity.type}
                 </Badge>
               </div>
             ))}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
