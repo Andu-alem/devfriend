@@ -2,6 +2,8 @@
 import { db } from '@/db/drizzle'
 import { auth } from '../auth'
 import * as z from 'zod'
+import { APIError } from 'better-auth'
+import { redirect } from 'next/navigation'
 
 
 const signupSchema = z.object({
@@ -32,12 +34,33 @@ export async function signupUser(prevState:any, formData: FormData) {
     }
 
     try {
+        await auth.api.signUpEmail({
+            body: {
+                name: name as string,
+                email: email as string,
+                password: password as string
+            }
+        })
     } catch(error) {
-        console.log("error occlured")
-        return {
-            errorMessage: ""
+        if (error instanceof APIError) {
+            switch(error.status) {
+                case "UNPROCESSABLE_ENTITY":
+                    return {
+                        errorMessage: "User already exists."
+                    }
+                case "BAD_REQUEST":
+                    return {
+                        errorMessage: "Inalid Credentials."
+                    }
+                default: 
+                    return {
+                        errorMessage: "Something went wrong."
+                    }
+            }
         }
     }
+
+    redirect("/dashboard")
 }
 
 export async function loginUser(prevState:any, formData: FormData) {
@@ -56,10 +79,30 @@ export async function loginUser(prevState:any, formData: FormData) {
     }
 
     try {
+        await auth.api.signInEmail({
+            body: {
+                email: email as string,
+                password: password as string
+            }
+        })
     } catch(error) {
-        console.log("error occlured")
-        return {
-            errorMessage: ""
+        if (error instanceof APIError) {
+            switch(error.status) {
+                case "UNPROCESSABLE_ENTITY":
+                    return {
+                        errorMessage: "User already exists."
+                    }
+                case "BAD_REQUEST":
+                    return {
+                        errorMessage: "Inalid Credentials."
+                    }
+                default: 
+                    return {
+                        errorMessage: "Something went wrong."
+                    }
+            }
         }
     }
+
+    redirect("/dashboard")
 }
