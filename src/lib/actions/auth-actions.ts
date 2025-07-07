@@ -28,6 +28,8 @@ export async function signupUser(prevState:any, formData: FormData) {
     })
 
     if (!validateData.success) {
+        
+        console.log("Validation error has occcured here bro")
         return {
             errorMessage: "Invalid data"
         }
@@ -41,7 +43,7 @@ export async function signupUser(prevState:any, formData: FormData) {
                 password: password as string
             }
         })
-    } catch(error) {
+    } catch (error) {
         if (error instanceof APIError) {
             switch(error.status) {
                 case "UNPROCESSABLE_ENTITY":
@@ -56,6 +58,10 @@ export async function signupUser(prevState:any, formData: FormData) {
                     return {
                         errorMessage: "Something went wrong."
                     }
+            }
+        } else {
+            return {
+                errorMessage: "Something went wrong, try again"
             }
         }
     }
@@ -72,7 +78,7 @@ export async function loginUser(prevState:any, formData: FormData) {
         password
     })
 
-    if (!validateData.success) {
+    if (!validateData.success) { 
         return {
             errorMessage: "Invalid data"
         }
@@ -100,6 +106,10 @@ export async function loginUser(prevState:any, formData: FormData) {
                     return {
                         errorMessage: "Something went wrong."
                     }
+            }
+        } else {
+            return {
+                errorMessage: "Something went wrong, try again."
             }
         }
     }
