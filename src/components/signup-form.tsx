@@ -10,7 +10,7 @@ import Link from "next/link";
 import { signupUser } from "@/lib/actions/auth-actions";
 import { Code } from "lucide-react";
 import { toast } from "sonner";
-
+import { Loader2 } from "lucide-react";
 
 export function SignUpForm() {
   const initialState = {
@@ -19,7 +19,7 @@ export function SignUpForm() {
   const [ state, formAction, pending ] = useActionState(signupUser,initialState)
 
   useEffect(() => {
-    if(state.errorMessage !== ""){
+    if(state.errorMessage.length > 0){
         toast.error(state.errorMessage)
     }
   }, [state])
@@ -77,7 +77,7 @@ export function SignUpForm() {
                 className={`mt-4 w-full ${pending ? 'animate-pulse':'animate-none'}`}
                 disabled={ pending }
             >
-              Continue with Email
+              { pending ? <Loader2 className="animate-spin" /> : "Sign up" }
             </Button>
         </form>
         <div className="my-3 w-full flex items-center justify-center overflow-hidden">
@@ -92,7 +92,7 @@ export function SignUpForm() {
 
         <p className="mt-5 text-sm text-center">
           Already have an account?
-          <Link href="/signup" className="ml-1 underline text-muted-foreground">
+          <Link href="/login" className="ml-1 underline text-muted-foreground">
             Log in
           </Link>
         </p>

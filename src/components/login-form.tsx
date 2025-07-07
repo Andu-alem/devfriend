@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,8 @@ import { GoogleLogo } from "@/components/google-logo";
 import Link from "next/link";
 import { loginUser } from "@/lib/actions/auth-actions";
 import { Code } from "lucide-react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 
 export function LoginForm() {
@@ -16,6 +18,12 @@ export function LoginForm() {
     errorMessage: ""
   }
   const [ state, formAction, pending ] = useActionState(loginUser,initialState)
+
+  useEffect(() => {
+    if(state.errorMessage.length > 0){
+        toast.error(state.errorMessage)
+    }
+  }, [state])
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -58,7 +66,7 @@ export function LoginForm() {
                 className={`mt-4 w-full ${pending ? 'animate-pulse':'animate-none'}`}
                 disabled={ pending }
             >
-              Continue with Email
+              { pending ? <Loader2 className="animate-spin" /> : "Log in" }
             </Button>
         </form>
         <div className="my-3 w-full flex items-center justify-center overflow-hidden">
