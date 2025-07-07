@@ -2,7 +2,7 @@
 import { db } from '@/db/drizzle'
 import { auth } from '../auth'
 import * as z from 'zod'
-import { APIError } from 'better-auth'
+import { APIError } from 'better-auth/api'
 import { redirect } from 'next/navigation'
 
 
