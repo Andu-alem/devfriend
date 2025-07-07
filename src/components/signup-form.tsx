@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { GoogleLogo } from "@/components/google-logo";
 import Link from "next/link";
 import { signupUser } from "@/lib/actions/auth-actions";
 import { Code } from "lucide-react";
+import { toast } from "sonner";
 
 
 export function SignUpForm() {
@@ -16,6 +17,12 @@ export function SignUpForm() {
     errorMessage: ""
   }
   const [ state, formAction, pending ] = useActionState(signupUser,initialState)
+
+  useEffect(() => {
+    if(state.errorMessage !== ""){
+        toast.error(state.errorMessage)
+    }
+  }, [state])
 
   return (
     <div className="min-h-screen flex items-center justify-center">
