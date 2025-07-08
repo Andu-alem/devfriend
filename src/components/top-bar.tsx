@@ -3,17 +3,24 @@
 import { Bell, Moon, Sun, User, Menu } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useState } from "react"
-
+import { useSession, signOut } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { MobileSidebar } from "./mobile-sidebar"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export function TopBar() {
   const { setTheme, theme } = useTheme()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const {
+    data:session,
+    isPending,
+  } = useSession()
+  const router = useRouter()
 
   return (
     <header className="fixed top-0 left-0 md:left-64 right-0 z-30 h-16 bg-background border-b border-border">
@@ -63,9 +70,17 @@ export function TopBar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Sign out</DropdownMenuItem>
+              <DropdownMenuItem className="bg-secondary" disabled aria-disabled>{ isPending ? "Loading..." : session?.user.name}</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/settings">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={ () => signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/login")
+                  }
+                }
+              }) }>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
