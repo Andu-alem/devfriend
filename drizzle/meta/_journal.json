@@ -8,6 +8,13 @@
       "when": 1751545142967,
       "tag": "0000_loose_mattie_franklin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1751975433681,
+      "tag": "0001_right_yellow_claw",
+      "breakpoints": true
     }
   ]
 }
