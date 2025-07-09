@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator";
 import { GoogleLogo } from "@/components/google-logo";
 import Link from "next/link";
 import { signupUser } from "@/lib/actions/auth-actions";
-import { Code } from "lucide-react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { AppLogo } from "./app-logo";
