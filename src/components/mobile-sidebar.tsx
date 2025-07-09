@@ -1,9 +1,10 @@
 "use client"
 
-import { Calendar, Home, Briefcase, FolderOpen, Settings, Target, X } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { Calendar, Home, Briefcase, FolderOpen, Settings, Target, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { AppLogo } from "./app-logo";
 
 const items = [
   {
@@ -46,17 +47,12 @@ export function MobileSidebar({ onClose }: MobileSidebarProps) {
       <div className="p-6 border-b border-border shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Target className="h-4 w-4" />
-            </div>
+            <AppLogo />
             <div className="flex flex-col">
               <span className="text-lg font-semibold">DevFriend</span>
               <span className="text-xs text-muted-foreground">Developer Tracker</span>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 

@@ -11,6 +11,7 @@ import { signupUser } from "@/lib/actions/auth-actions";
 import { Code } from "lucide-react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { AppLogo } from "./app-logo";
 
 export function SignUpForm() {
   const initialState = {
@@ -27,9 +28,7 @@ export function SignUpForm() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="max-w-xs w-full flex flex-col items-center">
-        <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-            <Code className="h-5 w-5 text-white" />
-        </div>
+        <AppLogo />
         <p className="mt-4 text-xl font-bold tracking-tight">
           Sign up for DevFriend
         </p>
