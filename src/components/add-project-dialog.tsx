@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useActionState, startTransition, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -19,85 +19,63 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Plus, X, Code, Calendar, Github, ExternalLink, Tag, FolderOpen } from "lucide-react"
+import { createProject } from "@/lib/actions/app-actions"
+import { toast } from "sonner"
 
 interface AddProjectDialogProps {
   children: React.ReactNode
   onProjectAdded?: (project: any) => void
 }
 
+const initialState = {
+  success: true,
+  errorMessage: ""
+}
+
 export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogProps) {
+  const [ state, formAction, isPending ] = useActionState(createProject, initialState)
   const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    status: "idea",
-    tags: [] as string[],
-    githubUrl: "",
-    demoUrl: "",
-    deadline: "",
-  })
-  const [currentTag, setCurrentTag] = useState("")
+  const [requiredSkills, setRequiredSkills] = useState<string[]>([])
+  
+  const [currentSkill, setCurrentSkill] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const { success, errorMessage } = state
+    if (!success && errorMessage.length < 1) return
+    if (errorMessage.length > 0) {
+      toast.error(errorMessage)
+    } else {
+      toast.success("Project created successfully!!!")
+    }
+  }, [state])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+    const formData = new FormData(e.currentTarget)
 
-      const newProject = {
-        id: Date.now(),
-        ...formData,
-        progress: formData.status === "idea" ? 0 : 10,
-        startDate: new Date().toISOString().split("T")[0],
-        lastUpdated: new Date().toISOString().split("T")[0],
-        stars: 0,
-        commits: 0,
-      }
+    formData.append('requiredSkills', JSON.stringify(requiredSkills))
 
-      onProjectAdded?.(newProject)
+    startTransition(() => {
+      formAction(formData)
+    })
+  }
 
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-        status: "idea",
-        tags: [],
-        githubUrl: "",
-        demoUrl: "",
-        deadline: "",
-      })
-      setOpen(false)
-    } catch (error) {
-      console.error("Error adding project:", error)
-    } finally {
-      setIsLoading(false)
+  const addSkill = () => {
+    if (currentSkill.trim() && !requiredSkills.includes(currentSkill.trim())) {
+      setRequiredSkills([...requiredSkills, currentSkill.trim()])
+      setCurrentSkill("")
     }
   }
 
-  const addTag = () => {
-    if (currentTag.trim() && !formData.tags.includes(currentTag.trim())) {
-      setFormData((prev) => ({
-        ...prev,
-        tags: [...prev.tags, currentTag.trim()],
-      }))
-      setCurrentTag("")
-    }
-  }
-
-  const removeTag = (tagToRemove: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    }))
+  const removeSkill = (skillToRemove: string) => {
+    setRequiredSkills(requiredSkills.filter((skill) => skill !== skillToRemove))
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault()
-      addTag()
+      addSkill()
     }
   }
 
@@ -113,28 +91,26 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
           <DialogDescription>Create a new project to track your development progress.</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={ handleSubmit } className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title" className="flex items-center gap-2">
               <Code className="h-4 w-4" />
-              Project Title *
+              Project Title <span className="text-red-500">*</span>
             </Label>
             <Input
               id="title"
+              name="title"
               placeholder="e.g. E-commerce Dashboard"
-              value={formData.title}
-              onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description *</Label>
+            <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
             <Textarea
               id="description"
+              name="description"
               placeholder="Describe your project, its goals, and key features..."
-              value={formData.description}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               rows={3}
               required
             />
@@ -147,15 +123,14 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
                 Status
               </Label>
               <Select
-                value={formData.status}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}
+                name="status"
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="idea">Idea</SelectItem>
-                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="inprogress">In Progress</SelectItem>
                   <SelectItem value="completed">Completed</SelectItem>
                   <SelectItem value="deployed">Deployed</SelectItem>
                 </SelectContent>
@@ -163,12 +138,22 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="start-date">Start Date</Label>
+              <Input
+                id="start-date"
+                type="date"
+                name="startDate"
+                min={ (new Date()).toISOString().split("T")[0] }
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="deadline">Deadline</Label>
               <Input
                 id="deadline"
                 type="date"
-                value={formData.deadline}
-                onChange={(e) => setFormData((prev) => ({ ...prev, deadline: e.target.value }))}
+                name="deadline"
+                min={ (new Date()).toISOString().split("T")[0] }
               />
             </div>
           </div>
@@ -182,9 +167,8 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
               <Input
                 id="githubUrl"
                 type="url"
+                name="githubUrl"
                 placeholder="https://github.com/username/repo"
-                value={formData.githubUrl}
-                onChange={(e) => setFormData((prev) => ({ ...prev, githubUrl: e.target.value }))}
               />
             </div>
 
@@ -196,9 +180,8 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
               <Input
                 id="demoUrl"
                 type="url"
+                name="demoUrl"
                 placeholder="https://your-project-demo.com"
-                value={formData.demoUrl}
-                onChange={(e) => setFormData((prev) => ({ ...prev, demoUrl: e.target.value }))}
               />
             </div>
           </div>
@@ -211,20 +194,20 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
             <div className="flex gap-2">
               <Input
                 placeholder="Add technology (e.g. React, Node.js, PostgreSQL)"
-                value={currentTag}
-                onChange={(e) => setCurrentTag(e.target.value)}
-                onKeyPress={handleKeyPress}
+                value={currentSkill}
+                onChange={(e) => setCurrentSkill(e.target.value)}
+                onKeyDown={handleKeyPress}
               />
-              <Button type="button" onClick={addTag} variant="outline" size="sm">
+              <Button type="button" onClick={addSkill} variant="outline" size="sm">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            {formData.tags.length > 0 && (
+            {requiredSkills.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="flex items-center gap-1">
-                    {tag}
-                    <button type="button" onClick={() => removeTag(tag)} className="ml-1 hover:text-destructive">
+                {requiredSkills.map((skill) => (
+                  <Badge key={skill} variant="secondary" className="flex items-center gap-1">
+                    {skill}
+                    <button type="button" onClick={() => removeSkill(skill)} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -237,8 +220,8 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Creating..." : "Create Project"}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Project"}
             </Button>
           </DialogFooter>
         </form>
