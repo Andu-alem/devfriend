@@ -35,9 +35,9 @@ const initialState = {
 export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogProps) {
   const [ state, formAction, isPending ] = useActionState(createProject, initialState)
   const [open, setOpen] = useState(false)
-  const [requiredSkills, setRequiredSkills] = useState<string[]>([])
+  const [techStacks, setTechStacks] = useState<string[]>([])
   
-  const [currentSkill, setCurrentSkill] = useState("")
+  const [currentStack, setCurrentStack] = useState("")
 
   useEffect(() => {
     const { success, errorMessage } = state
@@ -45,7 +45,7 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
     if (errorMessage.length > 0) {
       toast.error(errorMessage)
     } else {
-      toast.success("Project created successfully!!!")
+      toast.success("Project added successfully!!!")
     }
   }, [state])
 
@@ -54,7 +54,7 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
 
     const formData = new FormData(e.currentTarget)
 
-    formData.append('requiredSkills', JSON.stringify(requiredSkills))
+    formData.append('techStacks', JSON.stringify(techStacks))
 
     startTransition(() => {
       formAction(formData)
@@ -62,14 +62,14 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
   }
 
   const addSkill = () => {
-    if (currentSkill.trim() && !requiredSkills.includes(currentSkill.trim())) {
-      setRequiredSkills([...requiredSkills, currentSkill.trim()])
-      setCurrentSkill("")
+    if (currentStack.trim() && !techStacks.includes(currentStack.trim())) {
+      setTechStacks([...techStacks, currentStack.trim()])
+      setCurrentStack("")
     }
   }
 
   const removeSkill = (skillToRemove: string) => {
-    setRequiredSkills(requiredSkills.filter((skill) => skill !== skillToRemove))
+    setTechStacks(techStacks.filter((skill) => skill !== skillToRemove))
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -116,7 +116,7 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="status" className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
@@ -130,7 +130,7 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="idea">Idea</SelectItem>
-                  <SelectItem value="inprogress">In Progress</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
                   <SelectItem value="completed">Completed</SelectItem>
                   <SelectItem value="deployed">Deployed</SelectItem>
                 </SelectContent>
@@ -194,17 +194,17 @@ export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogP
             <div className="flex gap-2">
               <Input
                 placeholder="Add technology (e.g. React, Node.js, PostgreSQL)"
-                value={currentSkill}
-                onChange={(e) => setCurrentSkill(e.target.value)}
+                value={currentStack}
+                onChange={(e) => setCurrentStack(e.target.value)}
                 onKeyDown={handleKeyPress}
               />
               <Button type="button" onClick={addSkill} variant="outline" size="sm">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            {requiredSkills.length > 0 && (
+            {techStacks.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {requiredSkills.map((skill) => (
+                {techStacks.map((skill) => (
                   <Badge key={skill} variant="secondary" className="flex items-center gap-1">
                     {skill}
                     <button type="button" onClick={() => removeSkill(skill)} className="ml-1 hover:text-destructive">
