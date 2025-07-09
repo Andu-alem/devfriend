@@ -1,15 +1,16 @@
 "use server"
 
 import { db } from "@/db/drizzle";
-import { redirect } from 'next/navigation';
 import { auth } from "../auth";
 import { headers } from "next/headers";
 
 import { projects } from "@/db/schema/projects-schema";
 import { jobs } from "@/db/schema/jobs-schema";
+import { events } from "@/db/schema/events-schema";
 import { 
     projectSchema,
-    jobInsertSchema
+    jobInsertSchema,
+    eventInsertSchema
 } from "@/db/db-types";
 
 export async function createProject(prevState:any, formData: FormData) {
@@ -19,9 +20,12 @@ export async function createProject(prevState:any, formData: FormData) {
     const rawData = Object.fromEntries(formData);
     const newRawData = {
         ...rawData,
-        techStack: JSON.parse(formData.get("requiredSkills") as string) as string[],
+        techStack: JSON.parse(formData.get("techStacks") as string) as string[],
+        deadline: formData.get("deadline") === "" ? null : formData.get("deadline"),
+        startDate: formData.get("startDate") === "" ? null : formData.get("startDate"),
         userId: authData?.user.id as string
     }
+
     // validate the formdata using zod schema that is generated from the database schema
     if (!projectSchema.safeParse(newRawData).success) {
         return {
@@ -32,7 +36,7 @@ export async function createProject(prevState:any, formData: FormData) {
 
     try {
         const parsedData = projectSchema.parse(newRawData)
-        const createdProject = await db.insert(projects).values(parsedData)
+        await db.insert(projects).values(parsedData)
         return {
             success: true,
             errorMessage: ""
@@ -53,6 +57,7 @@ export async function createJob(prevState: any, formData: FormData) {
     const newRawData = {
         ...rawData,
         requiredSkills: JSON.parse(formData.get("requiredSkills") as string) as string[],
+        deadline: formData.get("deadline") === "" ? null : formData.get("deadline"),
         userId: authData?.user.id as string
     }
 
@@ -66,7 +71,7 @@ export async function createJob(prevState: any, formData: FormData) {
 
     try {
         const parsedData = jobInsertSchema.parse(newRawData)
-        const createJob = await db.insert(jobs).values(parsedData)
+        await db.insert(jobs).values(parsedData)
 
         return {
             success: true,
@@ -81,10 +86,36 @@ export async function createJob(prevState: any, formData: FormData) {
 }
 
 export async function createEvent(prevState: any, formData: FormData) {
-    const rawData = Object.fromEntries(formData);
-    console.log("the submited data is ----- ", rawData)
+    const authData = await auth.api.getSession({
+        headers: await headers()
+    })
 
-    return {
-        errorMessage: ""
+    const rawData = Object.fromEntries(formData);
+    const newRawData = {
+        ...rawData,
+        userId: authData?.user.id as string
+    }
+
+    // validate the formdata using zod schema that is generated from the database schema
+    if (!eventInsertSchema.safeParse(newRawData).success) {
+        return {
+            success: false,
+            errorMessage: "Invalid data"
+        }
+    }
+
+    try {
+        const parsedData = eventInsertSchema.parse(newRawData)
+        await db.insert(events).values(parsedData)
+
+        return {
+            success: true,
+            errorMessage: ""
+        }
+    } catch (error) {
+        return {
+            success: false,
+            errorMessage: "Something went wrong, try again"
+        }
     }
 }
