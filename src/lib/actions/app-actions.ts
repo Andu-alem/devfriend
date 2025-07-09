@@ -1,13 +1,43 @@
+"use server"
+
 import { db } from "@/db/drizzle";
 import { redirect } from 'next/navigation';
-import { revalidatePath } from "next/cache";
+import { auth } from "../auth";
+import { headers } from "next/headers";
+
+import { projects } from "@/db/schema/projects-schema";
+import { projectSchema } from "@/db/db-types";
 
 export async function createProject(prevState:any, formData: FormData) {
+    const authData = await auth.api.getSession({
+        headers: await headers()
+    })
     const rawData = Object.fromEntries(formData);
-    console.log("the submited data is ----- ", rawData)
+    const newRawData = {
+        ...rawData,
+        techStack: JSON.parse(formData.get("requiredSkills") as string) as string[],
+        userId: authData?.user.id as string
+    }
+    // validate the formdata using zod schema that is generated from the database schema
+    if (!projectSchema.safeParse(newRawData).success) {
+        return {
+            success: false,
+            errorMessage: "Invalid data"
+        }
+    }
 
-    return {
-        errorMessage: ""
+    try {
+        const parsedData = projectSchema.parse(newRawData)
+        const createdProject = await db.insert(projects).values(parsedData)
+        return {
+            success: true,
+            errorMessage: ""
+        }
+    } catch (error) {
+        return {
+            success: false,
+            errorMessage: "Something went wrong, try again"
+        }
     }
 }
 
