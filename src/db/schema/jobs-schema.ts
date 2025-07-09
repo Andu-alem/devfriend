@@ -20,6 +20,7 @@ export const jobs = pgTable("jobs", {
     description: text("description").notNull(),
     url: varchar("url", { length: 255 }),
     requiredSkills: jsonb("required_skills").$type<string[]>(),
+    deadline: date('deadline'),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     userId: text("user_id")
