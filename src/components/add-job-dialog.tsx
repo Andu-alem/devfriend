@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect, useActionState, startTransition } from "react"
 import {
   Dialog,
   DialogContent,
@@ -19,83 +19,64 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Plus, X, Building, MapPin, DollarSign, Calendar, FileText, Tag } from "lucide-react"
+import { createJob } from "@/lib/actions/app-actions"
+import { toast } from "sonner"
+
 
 interface AddJobDialogProps {
   children: React.ReactNode
   onJobAdded?: (job: any) => void
 }
 
+const initialState = {
+  success: true,
+  errorMessage: ""
+}
+
 export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
+  const [ state, formAction, isPending ] = useActionState(createJob, initialState)
   const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    title: "",
-    company: "",
-    location: "",
-    salary: "",
-    status: "saved",
-    description: "",
-    url: "",
-    tags: [] as string[],
-  })
-  const [currentTag, setCurrentTag] = useState("")
+  const [requiredSkills, setRequiredSkills] = useState<string[]>([])
+  
+  const [currentSkill, setCurrentSkill] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const { success, errorMessage } = state
+    if (!success && errorMessage.length < 1) return
+    if (errorMessage.length > 0) {
+      toast.error(errorMessage)
+    } else {
+      toast.success("Job added successfully!!!")
+    }
+  }, [state])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+    const formData = new FormData(e.currentTarget)
 
-      const newJob = {
-        id: Date.now(),
-        ...formData,
-        appliedDate: formData.status === "applied" ? new Date().toISOString().split("T")[0] : null,
-      }
+    formData.append('requiredSkills', JSON.stringify(requiredSkills))
 
-      onJobAdded?.(newJob)
+    startTransition(() => {
+      formAction(formData)
+    })
+  }
 
-      // Reset form
-      setFormData({
-        title: "",
-        company: "",
-        location: "",
-        salary: "",
-        status: "saved",
-        description: "",
-        url: "",
-        tags: [],
-      })
-      setOpen(false)
-    } catch (error) {
-      console.error("Error adding job:", error)
-    } finally {
-      setIsLoading(false)
+  const addSkill = () => {
+    if (currentSkill.trim() && !requiredSkills.includes(currentSkill.trim())) {
+      setRequiredSkills([...requiredSkills, currentSkill.trim()])
+      setCurrentSkill("")
     }
   }
 
-  const addTag = () => {
-    if (currentTag.trim() && !formData.tags.includes(currentTag.trim())) {
-      setFormData((prev) => ({
-        ...prev,
-        tags: [...prev.tags, currentTag.trim()],
-      }))
-      setCurrentTag("")
-    }
-  }
-
-  const removeTag = (tagToRemove: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    }))
+  const removeSkill = (skillToRemove: string) => {
+    setRequiredSkills(requiredSkills.filter((skill) => skill !== skillToRemove))
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault()
-      addTag()
+      addSkill()
     }
   }
 
@@ -116,13 +97,12 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             <div className="space-y-2">
               <Label htmlFor="title" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
-                Job Title *
+                Job Title <span className="text-red-400">*</span>
               </Label>
               <Input
                 id="title"
+                name="title"
                 placeholder="e.g. Senior Frontend Developer"
-                value={formData.title}
-                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                 required
               />
             </div>
@@ -130,13 +110,12 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             <div className="space-y-2">
               <Label htmlFor="company" className="flex items-center gap-2">
                 <Building className="h-4 w-4" />
-                Company *
+                Company <span className="text-red-400">*</span>
               </Label>
               <Input
                 id="company"
+                name="company"
                 placeholder="e.g. Google"
-                value={formData.company}
-                onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
                 required
               />
             </div>
@@ -150,9 +129,8 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
               </Label>
               <Input
                 id="location"
+                name="location"
                 placeholder="e.g. San Francisco, CA"
-                value={formData.location}
-                onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
               />
             </div>
 
@@ -163,9 +141,8 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
               </Label>
               <Input
                 id="salary"
+                name="salary"
                 placeholder="e.g. $120k - $150k"
-                value={formData.salary}
-                onChange={(e) => setFormData((prev) => ({ ...prev, salary: e.target.value }))}
               />
             </div>
           </div>
@@ -176,8 +153,7 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
               Status
             </Label>
             <Select
-              value={formData.status}
-              onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}
+              name="status"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />
@@ -186,7 +162,8 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
                 <SelectItem value="saved">Saved</SelectItem>
                 <SelectItem value="applied">Applied</SelectItem>
                 <SelectItem value="interviewing">Interviewing</SelectItem>
-                <SelectItem value="offer">Offer</SelectItem>
+                <SelectItem value="offered">Offer</SelectItem>
+                <SelectItem value="accepted">Accepted</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
@@ -197,9 +174,8 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             <Input
               id="url"
               type="url"
+              name="url"
               placeholder="https://company.com/careers/job-id"
-              value={formData.url}
-              onChange={(e) => setFormData((prev) => ({ ...prev, url: e.target.value }))}
             />
           </div>
 
@@ -207,9 +183,8 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
+              name="description"
               placeholder="Job description, requirements, notes..."
-              value={formData.description}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               rows={3}
             />
           </div>
@@ -222,20 +197,20 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             <div className="flex gap-2">
               <Input
                 placeholder="Add a skill (e.g. React, TypeScript)"
-                value={currentTag}
-                onChange={(e) => setCurrentTag(e.target.value)}
-                onKeyPress={handleKeyPress}
+                value={currentSkill}
+                onChange={(e) => setCurrentSkill(e.target.value)}
+                onKeyDown={handleKeyPress}
               />
-              <Button type="button" onClick={addTag} variant="outline" size="sm">
+              <Button type="button" onClick={addSkill} variant="outline" size="sm">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            {formData.tags.length > 0 && (
+            {requiredSkills.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="flex items-center gap-1">
-                    {tag}
-                    <button type="button" onClick={() => removeTag(tag)} className="ml-1 hover:text-destructive">
+                {requiredSkills.map((skill) => (
+                  <Badge key={skill} variant="secondary" className="flex items-center gap-1">
+                    {skill}
+                    <button type="button" onClick={() => removeSkill(skill)} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
@@ -248,8 +223,8 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Adding..." : "Add Job Application"}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Adding..." : "Add Job Application"}
             </Button>
           </DialogFooter>
         </form>
