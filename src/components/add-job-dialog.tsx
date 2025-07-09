@@ -147,26 +147,37 @@ export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Status
-            </Label>
-            <Select
-              name="status"
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="saved">Saved</SelectItem>
-                <SelectItem value="applied">Applied</SelectItem>
-                <SelectItem value="interviewing">Interviewing</SelectItem>
-                <SelectItem value="offered">Offer</SelectItem>
-                <SelectItem value="accepted">Accepted</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="status" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Status
+              </Label>
+              <Select
+                name="status"
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="saved">Saved</SelectItem>
+                  <SelectItem value="applied">Applied</SelectItem>
+                  <SelectItem value="interviewing">Interviewing</SelectItem>
+                  <SelectItem value="offered">Offer</SelectItem>
+                  <SelectItem value="accepted">Accepted</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="deadline">Deadline</Label>
+              <Input
+                id="deadline"
+                type="date"
+                name="deadline"
+                min={ (new Date()).toISOString().split("T")[0] }
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
