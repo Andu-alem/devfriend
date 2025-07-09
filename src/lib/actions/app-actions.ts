@@ -6,7 +6,11 @@ import { auth } from "../auth";
 import { headers } from "next/headers";
 
 import { projects } from "@/db/schema/projects-schema";
-import { projectSchema } from "@/db/db-types";
+import { jobs } from "@/db/schema/jobs-schema";
+import { 
+    projectSchema,
+    jobInsertSchema
+} from "@/db/db-types";
 
 export async function createProject(prevState:any, formData: FormData) {
     const authData = await auth.api.getSession({
@@ -42,11 +46,37 @@ export async function createProject(prevState:any, formData: FormData) {
 }
 
 export async function createJob(prevState: any, formData: FormData) {
+    const authData = await auth.api.getSession({
+        headers: await headers()
+    })
     const rawData = Object.fromEntries(formData);
-    console.log("the submited data is ----- ", rawData)
+    const newRawData = {
+        ...rawData,
+        requiredSkills: JSON.parse(formData.get("requiredSkills") as string) as string[],
+        userId: authData?.user.id as string
+    }
 
-    return {
-        errorMessage: ""
+    // validate the formdata using zod schema that is generated from the database schema
+    if (!jobInsertSchema.safeParse(newRawData).success) {
+        return {
+            success: false,
+            errorMessage: "Invalid data"
+        }
+    }
+
+    try {
+        const parsedData = jobInsertSchema.parse(newRawData)
+        const createJob = await db.insert(jobs).values(parsedData)
+
+        return {
+            success: true,
+            errorMessage: ""
+        }
+    } catch (error) {
+        return {
+            success: false,
+            errorMessage: "Something went wrong, try again"
+        }
     }
 }
 
