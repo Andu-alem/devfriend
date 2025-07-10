@@ -22,17 +22,12 @@ import { Calendar, Clock, MapPin, Briefcase } from "lucide-react"
 import { createEvent } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
 
-interface AddEventDialogProps {
-  children: React.ReactNode
-  onEventAdded?: (event: any) => void
-}
-
 const initialState = {
   success: true,
   errorMessage: ""
 }
 
-export function AddEventDialog({ children, onEventAdded }: AddEventDialogProps) {
+export function AddEventDialog({ children }:{ children: React.ReactNode }) {
   const [ state, formAction, isPending ] = useActionState(createEvent, initialState)
   const [open, setOpen] = useState(false)
 

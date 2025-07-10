@@ -22,18 +22,12 @@ import { Plus, X, Building, MapPin, DollarSign, Calendar, FileText, Tag } from "
 import { createJob } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
 
-
-interface AddJobDialogProps {
-  children: React.ReactNode
-  onJobAdded?: (job: any) => void
-}
-
 const initialState = {
   success: true,
   errorMessage: ""
 }
 
-export function AddJobDialog({ children, onJobAdded }: AddJobDialogProps) {
+export function AddJobDialog({ children }:{ children: React.ReactNode }) {
   const [ state, formAction, isPending ] = useActionState(createJob, initialState)
   const [open, setOpen] = useState(false)
   const [requiredSkills, setRequiredSkills] = useState<string[]>([])
