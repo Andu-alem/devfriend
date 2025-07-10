@@ -10,8 +10,8 @@ import {
 import { Badge } from "./ui/badge";
 
 export function StatusBadge({ projectStatus }:{ projectStatus: string }) { 
-    console.log("The project status is ----- ", projectStatus)   
-      const getStatusIcon = (status: string) => {
+       
+    const getStatusIcon = (status: string) => {
         switch (status) {
             case "idea":
                 return <Lightbulb className="h-4 w-4" />
@@ -24,9 +24,9 @@ export function StatusBadge({ projectStatus }:{ projectStatus: string }) {
             default:
                 return <Code className="h-4 w-4" />
         }
-      }
+    }
     
-      const getStatusColor = (status: string) => {
+    const getStatusColor = (status: string) => {
         switch (status) {
             case "idea":
                 return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
