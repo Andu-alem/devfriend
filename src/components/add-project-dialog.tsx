@@ -22,17 +22,12 @@ import { Plus, X, Code, Calendar, Github, ExternalLink, Tag, FolderOpen } from "
 import { createProject } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
 
-interface AddProjectDialogProps {
-  children: React.ReactNode
-  onProjectAdded?: (project: any) => void
-}
-
 const initialState = {
   success: true,
   errorMessage: ""
 }
 
-export function AddProjectDialog({ children, onProjectAdded }: AddProjectDialogProps) {
+export function AddProjectDialog({ children }:{ children: React.ReactNode }) {
   const [ state, formAction, isPending ] = useActionState(createProject, initialState)
   const [open, setOpen] = useState(false)
   const [techStacks, setTechStacks] = useState<string[]>([])
