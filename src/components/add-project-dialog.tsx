@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useActionState, startTransition, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ const initialState = {
 }
 
 export function AddProjectDialog({ children }:{ children: React.ReactNode }) {
+  const router = useRouter()
   const [ state, formAction, isPending ] = useActionState(createProject, initialState)
   const [open, setOpen] = useState(false)
   const [techStacks, setTechStacks] = useState<string[]>([])
@@ -41,6 +43,7 @@ export function AddProjectDialog({ children }:{ children: React.ReactNode }) {
       toast.error(errorMessage)
     } else {
       toast.success("Project added successfully!!!")
+      router.refresh()
     }
   }, [state])
 

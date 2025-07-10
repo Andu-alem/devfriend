@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect, useActionState, startTransition } from "react"
+import { useRouter } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ const initialState = {
 }
 
 export function AddJobDialog({ children }:{ children: React.ReactNode }) {
+  const router = useRouter()
   const [ state, formAction, isPending ] = useActionState(createJob, initialState)
   const [open, setOpen] = useState(false)
   const [requiredSkills, setRequiredSkills] = useState<string[]>([])
@@ -41,6 +43,7 @@ export function AddJobDialog({ children }:{ children: React.ReactNode }) {
       toast.error(errorMessage)
     } else {
       toast.success("Job added successfully!!!")
+      router.refresh()
     }
   }, [state])
 
@@ -157,7 +160,7 @@ export function AddJobDialog({ children }:{ children: React.ReactNode }) {
                   <SelectItem value="saved">Saved</SelectItem>
                   <SelectItem value="applied">Applied</SelectItem>
                   <SelectItem value="interviewing">Interviewing</SelectItem>
-                  <SelectItem value="offered">Offer</SelectItem>
+                  <SelectItem value="offer">Offer</SelectItem>
                   <SelectItem value="accepted">Accepted</SelectItem>
                   <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
