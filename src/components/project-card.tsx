@@ -73,7 +73,7 @@ function VerticalProjectCard({
                 </div>
 
                 <div className="flex gap-2">
-                    {project.githubUrl && (
+                    {(project.githubUrl && project.githubUrl.length > 0) && (
                         <Button variant="outline" size="sm" asChild className="flex-1 bg-transparent">
                             <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                                 <Github className="h-4 w-4 mr-2" />
@@ -81,7 +81,7 @@ function VerticalProjectCard({
                             </a>
                         </Button>
                     )}
-                    {project.demoUrl && (
+                    {(project.demoUrl && project.demoUrl.length > 0) && (
                         <Button variant="outline" size="sm" asChild className="flex-1 bg-transparent">
                             <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                                 <ExternalLink className="h-4 w-4 mr-2" />
@@ -130,14 +130,14 @@ function HorizontalProjectCard({
                     </div>
 
                     <div className="flex flex-row lg:flex-col gap-2">
-                        {project.githubUrl && (
+                        {(project.githubUrl && project.githubUrl.length > 0) && (
                             <Button variant="outline" size="sm" asChild>
                                 <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                                     <Github className="h-4 w-4" />
                                 </a>
                             </Button>
                         )}
-                        {project.demoUrl && (
+                        {(project.demoUrl && project.demoUrl.length > 0) && (
                             <Button variant="outline" size="sm" asChild>
                                 <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                                     <ExternalLink className="h-4 w-4" />
