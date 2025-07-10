@@ -24,7 +24,7 @@ import { createEvent } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
 
 const initialState = {
-  success: true,
+  success: false,
   errorMessage: ""
 }
 
@@ -40,7 +40,8 @@ export function AddEventDialog({ children }:{ children: React.ReactNode }) {
       toast.error(errorMessage)
     } else {
       toast.success("Event added successfully!!!")
-      router.refresh()
+      setOpen(false)
+      router.push("/calendar")
     }
   }, [state])
 
