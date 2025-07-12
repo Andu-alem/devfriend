@@ -12,6 +12,7 @@ import {
     jobInsertSchema,
     eventInsertSchema
 } from "@/db/db-types";
+import { revalidatePath } from "next/cache";
 
 export async function createProject(prevState:any, formData: FormData) {
     const authData = await auth.api.getSession({
@@ -37,6 +38,9 @@ export async function createProject(prevState:any, formData: FormData) {
     try {
         const parsedData = projectSchema.parse(newRawData)
         await db.insert(projects).values(parsedData)
+
+        revalidatePath("/projects")
+
         return {
             success: true,
             errorMessage: ""
@@ -73,6 +77,7 @@ export async function createJob(prevState: any, formData: FormData) {
         const parsedData = jobInsertSchema.parse(newRawData)
         await db.insert(jobs).values(parsedData)
 
+        revalidatePath("/jobs")
         return {
             success: true,
             errorMessage: ""
@@ -108,6 +113,7 @@ export async function createEvent(prevState: any, formData: FormData) {
         const parsedData = eventInsertSchema.parse(newRawData)
         await db.insert(events).values(parsedData)
 
+        revalidatePath("/calendar")
         return {
             success: true,
             errorMessage: ""
