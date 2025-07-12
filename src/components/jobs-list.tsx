@@ -33,7 +33,7 @@ export function JobsList({
         const matchesStatus = statusFilter === "all" || job.status === statusFilter
 
         return matchesSearch && matchesStatus
-    }), [jobs])
+    }), [jobs, searchTerm, statusFilter])
 
     const columns = useMemo(() => ([
         { id: "saved", title: "Saved", jobs: jobs.filter((j) => j.status === "saved") },
@@ -72,10 +72,10 @@ export function JobsList({
                             <Card key={column.id} className="min-h-[500px]">
                                 <CardHeader className="pb-3">
                                     <CardTitle className="text-sm font-medium flex items-center justify-between">
-                                    {column.title}
-                                    <Badge variant="secondary" className="ml-2">
-                                        {column.jobs.length}
-                                    </Badge>
+                                        {column.title}
+                                        <Badge variant="secondary" className="ml-2">
+                                            {column.jobs.length}
+                                        </Badge>
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
