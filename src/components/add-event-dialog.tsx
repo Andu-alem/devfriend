@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useActionState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -30,6 +30,7 @@ const initialState = {
 
 export function AddEventDialog({ children }:{ children: React.ReactNode }) {
   const router = useRouter()
+  const pathName = usePathname()
   const [ state, formAction, isPending ] = useActionState(createEvent, initialState)
   const [open, setOpen] = useState(false)
 
@@ -41,7 +42,12 @@ export function AddEventDialog({ children }:{ children: React.ReactNode }) {
     } else {
       toast.success("Event added successfully!!!")
       setOpen(false)
-      router.push("/calendar")
+      if (pathName.includes("calendar")){
+        router.refresh()
+      } else {
+        // if event is added from the dashboard home page, redirect user to calendar page
+        router.push("/calendar")
+      }
     }
   }, [state])
 

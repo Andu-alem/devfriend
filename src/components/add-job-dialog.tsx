@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect, useActionState, startTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -24,12 +24,13 @@ import { createJob } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
 
 const initialState = {
-  success: true,
+  success: false,
   errorMessage: ""
 }
 
 export function AddJobDialog({ children }:{ children: React.ReactNode }) {
   const router = useRouter()
+  const pathName = usePathname()
   const [ state, formAction, isPending ] = useActionState(createJob, initialState)
   const [open, setOpen] = useState(false)
   const [requiredSkills, setRequiredSkills] = useState<string[]>([])
@@ -43,7 +44,13 @@ export function AddJobDialog({ children }:{ children: React.ReactNode }) {
       toast.error(errorMessage)
     } else {
       toast.success("Job added successfully!!!")
-      router.refresh()
+      setOpen(false)
+      if (pathName.includes("jobs")){
+        router.refresh()
+      } else {
+        // if job is added from the dashboard home page, redirect user to jobs page
+        router.push("/jobs")
+      }
     }
   }, [state])
 

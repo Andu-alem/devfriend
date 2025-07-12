@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useActionState, startTransition, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -24,12 +24,13 @@ import { createProject } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
 
 const initialState = {
-  success: true,
+  success: false,
   errorMessage: ""
 }
 
 export function AddProjectDialog({ children }:{ children: React.ReactNode }) {
   const router = useRouter()
+  const pathName = usePathname()
   const [ state, formAction, isPending ] = useActionState(createProject, initialState)
   const [open, setOpen] = useState(false)
   const [techStacks, setTechStacks] = useState<string[]>([])
@@ -43,7 +44,13 @@ export function AddProjectDialog({ children }:{ children: React.ReactNode }) {
       toast.error(errorMessage)
     } else {
       toast.success("Project added successfully!!!")
-      router.refresh()
+      setOpen(false)
+      if (pathName.includes("projects")){
+        router.refresh()
+      } else {
+        // if project is added from the dashboard home page, redirect user to projects page
+        router.push("/projects")
+      }
     }
   }, [state])
 
