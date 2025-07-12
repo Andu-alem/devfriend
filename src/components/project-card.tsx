@@ -53,22 +53,17 @@ function VerticalProjectCard({
                 <CardDescription className="line-clamp-3">{project.description}</CardDescription>
 
                 <div className="flex flex-wrap gap-1">
-                    {project.techStack && project.techStack.slice(0, 3).map((tag) => (
+                    {project.techStack && project.techStack.map((tag) => (
                         <Badge key={tag} variant="outline" className="text-xs">
                             {tag}
                         </Badge>
                     ))}
-                    {project.techStack && project.techStack.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                            +{project.techStack.length - 3}
-                        </Badge>
-                    )}
                 </div>
 
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
-                        {(project.updatedAt).toDateString()}
+                        {new Date(project.updatedAt).toDateString()}
                     </div>
                 </div>
 
@@ -124,7 +119,7 @@ function HorizontalProjectCard({
                         <div className="flex items-center gap-6 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                                 <Calendar className="h-4 w-4" />
-                                Updated {(project.updatedAt).toDateString()}
+                                Updated {new Date(project.updatedAt).toDateString()}
                             </div>
                         </div>
                     </div>
