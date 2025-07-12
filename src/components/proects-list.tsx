@@ -30,15 +30,15 @@ export function ProjectsList({
         
             return matchesSearch && matchesStatus
         })
-    },[searchTerm, statusFilter])
+    },[searchTerm, statusFilter, projects])
 
-    const statusCounts = {
+    const statusCounts = useMemo(() => ({
         all: projects.length,
         idea: projects.filter((p) => p.status === "idea").length,
         "in-progress": projects.filter((p) => p.status === "in-progress").length,
         completed: projects.filter((p) => p.status === "completed").length,
         deployed: projects.filter((p) => p.status === "deployed").length,
-    }
+    }), [projects])
 
     return (
         <div className="space-y-6">
