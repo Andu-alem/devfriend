@@ -49,7 +49,7 @@ export function AddEventDialog({ children }:{ children: React.ReactNode }) {
         router.push("/calendar")
       }
     }
-  }, [statem, router, pathName])
+  }, [state, router, pathName])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
