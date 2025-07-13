@@ -24,26 +24,3 @@ export default function LandingPage() {
     </div>
   )
 }
-
-function StatsSection() {
-  const stats = [
-    { label: "Active Users", value: "10,000+", delay: "delay-100" },
-    { label: "Jobs Tracked", value: "50,000+", delay: "delay-200" },
-    { label: "Projects Managed", value: "25,000+", delay: "delay-300" },
-    { label: "Success Rate", value: "85%", delay: "delay-500" },
-  ]
-  return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className={`text-center animate-count-up ${stat.delay}`}>
-                <div className="text-3xl sm:text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-    </section>
-  )
-}

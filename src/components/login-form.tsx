@@ -78,7 +78,7 @@ export function LoginForm() {
         </Button>
 
         <p className="mt-5 text-sm text-center">
-          Don't you have an account?
+          Don&apos;t you have an account?
           <Link href="/signup" className="ml-1 underline text-muted-foreground">
             Sign up
           </Link>

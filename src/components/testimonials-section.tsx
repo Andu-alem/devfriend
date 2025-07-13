@@ -68,7 +68,7 @@ export function TestimonialsSection() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-muted-foreground">"{testimonial.content}"</p>
+                                <p className="text-muted-foreground">&quot;{testimonial.content}&quot;</p>
                             </CardContent>
                         </Card>
                     ))}

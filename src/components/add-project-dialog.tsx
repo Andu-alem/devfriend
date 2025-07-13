@@ -52,7 +52,7 @@ export function AddProjectDialog({ children }:{ children: React.ReactNode }) {
         router.push("/projects")
       }
     }
-  }, [state])
+  }, [state, router, pathName])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

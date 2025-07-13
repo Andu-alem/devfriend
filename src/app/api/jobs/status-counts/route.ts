@@ -28,7 +28,7 @@ export async function GET() {
         return NextResponse.json(result)
     } catch (error) {
         return NextResponse.json(
-            { error: "Couldn't access the database" },
+            { error },
             { status: 500 }
         )
     }

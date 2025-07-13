@@ -5,7 +5,7 @@ import { db } from "@/db/drizzle";
 import { projects } from "@/db/schema/projects-schema";
 import { desc, eq } from "drizzle-orm";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     const authData = await auth.api.getSession({
         headers: await headers(),
     })
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(result)
     } catch (error) {
         return NextResponse.json(
-            { error: "Couldn't access the database" },
+            { error },
             { status: 500 }
         )
     }

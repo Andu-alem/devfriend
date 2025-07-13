@@ -14,7 +14,12 @@ import {
 } from "@/db/db-types";
 import { revalidatePath } from "next/cache";
 
-export async function createProject(prevState:any, formData: FormData) {
+interface PrevState {
+    success: boolean
+    errorMessage: string
+}
+
+export async function createProject(prevState:PrevState, formData: FormData) {
     const authData = await auth.api.getSession({
         headers: await headers()
     })
@@ -49,12 +54,12 @@ export async function createProject(prevState:any, formData: FormData) {
     } catch (error) {
         return {
             success: false,
-            errorMessage: "Something went wrong, try again"
+            errorMessage: error
         }
     }
 }
 
-export async function createJob(prevState: any, formData: FormData) {
+export async function createJob(prevState: PrevState, formData: FormData) {
     const authData = await auth.api.getSession({
         headers: await headers()
     })
@@ -87,12 +92,12 @@ export async function createJob(prevState: any, formData: FormData) {
     } catch (error) {
         return {
             success: false,
-            errorMessage: "Something went wrong, try again"
+            errorMessage: error
         }
     }
 }
 
-export async function createEvent(prevState: any, formData: FormData) {
+export async function createEvent(prevState: PrevState, formData: FormData) {
     const authData = await auth.api.getSession({
         headers: await headers()
     })
@@ -124,7 +129,7 @@ export async function createEvent(prevState: any, formData: FormData) {
     } catch (error) {
         return {
             success: false,
-            errorMessage: "Something went wrong, try again"
+            errorMessage: error
         }
     }
 }

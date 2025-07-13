@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Clock, MapPin, Briefcase } from "lucide-react"
+import { Calendar, Clock } from "lucide-react"
 
 import { createEvent } from "@/lib/actions/app-actions"
 import { toast } from "sonner"
@@ -49,7 +49,7 @@ export function AddEventDialog({ children }:{ children: React.ReactNode }) {
         router.push("/calendar")
       }
     }
-  }, [state])
+  }, [statem, router, pathName])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

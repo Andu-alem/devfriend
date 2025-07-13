@@ -1,5 +1,4 @@
 'use server'
-import { db } from '@/db/drizzle'
 import { auth } from '../auth'
 import * as z from 'zod'
 import { APIError } from 'better-auth/api'
@@ -17,7 +16,12 @@ const loginSchema = z.object({
     password: z.string().min(8)
 })
 
-export async function signupUser(prevState:any, formData: FormData) {
+interface PrevState {
+    success: boolean
+    errorMessage: string
+}
+
+export async function signupUser(prevState:PrevState, formData: FormData) {
     const rawFormData = Object.fromEntries(formData)
     const { name, email, password } = rawFormData
 
@@ -69,7 +73,7 @@ export async function signupUser(prevState:any, formData: FormData) {
     redirect("/dashboard")
 }
 
-export async function loginUser(prevState:any, formData: FormData) {
+export async function loginUser(prevState:PrevState, formData: FormData) {
     const rawFormData = Object.fromEntries(formData)
     const { email, password } = rawFormData
 

@@ -52,7 +52,7 @@ export function AddJobDialog({ children }:{ children: React.ReactNode }) {
         router.push("/jobs")
       }
     }
-  }, [state])
+  }, [state, router, pathName])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
