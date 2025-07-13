@@ -40,6 +40,7 @@ export async function createProject(prevState:any, formData: FormData) {
         await db.insert(projects).values(parsedData)
 
         revalidatePath("/projects")
+        revalidatePath("/dashboard")
 
         return {
             success: true,
@@ -78,6 +79,7 @@ export async function createJob(prevState: any, formData: FormData) {
         await db.insert(jobs).values(parsedData)
 
         revalidatePath("/jobs")
+        revalidatePath("/dashboard")
         return {
             success: true,
             errorMessage: ""
@@ -114,6 +116,7 @@ export async function createEvent(prevState: any, formData: FormData) {
         await db.insert(events).values(parsedData)
 
         revalidatePath("/calendar")
+        revalidatePath("/dashboard")
         return {
             success: true,
             errorMessage: ""
