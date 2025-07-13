@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/db/drizzle";
 import { projects } from "@/db/schema/projects-schema";
-import { count } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 
 export async function GET() {
     const authData = await auth.api.getSession({
@@ -22,6 +22,7 @@ export async function GET() {
                 count: count()
             })
             .from(projects)
+            .where(eq(projects.userId, authData.user.id))
             .groupBy(projects.status)
 
         return NextResponse.json(result)
