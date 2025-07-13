@@ -168,7 +168,6 @@ export function AddJobDialog({ children }:{ children: React.ReactNode }) {
                   <SelectItem value="applied">Applied</SelectItem>
                   <SelectItem value="interviewing">Interviewing</SelectItem>
                   <SelectItem value="offer">Offer</SelectItem>
-                  <SelectItem value="accepted">Accepted</SelectItem>
                   <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
