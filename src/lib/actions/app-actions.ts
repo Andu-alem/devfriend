@@ -54,7 +54,7 @@ export async function createProject(prevState:PrevState, formData: FormData) {
     } catch (error) {
         return {
             success: false,
-            errorMessage: error
+            errorMessage: error as string
         }
     }
 }
@@ -92,7 +92,7 @@ export async function createJob(prevState: PrevState, formData: FormData) {
     } catch (error) {
         return {
             success: false,
-            errorMessage: error
+            errorMessage: error as string
         }
     }
 }
@@ -129,7 +129,7 @@ export async function createEvent(prevState: PrevState, formData: FormData) {
     } catch (error) {
         return {
             success: false,
-            errorMessage: error
+            errorMessage: error as string
         }
     }
 }
