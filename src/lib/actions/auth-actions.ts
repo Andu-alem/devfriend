@@ -46,6 +46,7 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
                 password: password as string
             }
         })
+        return prevState
     } catch (error) {
         if (error instanceof APIError) {
             switch(error.status) {
@@ -94,6 +95,7 @@ export async function loginUser(prevState:PrevState, formData: FormData) {
                 password: password as string
             }
         })
+        return prevState
     } catch(error) {
         if (error instanceof APIError) {
             switch(error.status) {
