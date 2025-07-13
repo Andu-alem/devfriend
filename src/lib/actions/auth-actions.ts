@@ -17,7 +17,6 @@ const loginSchema = z.object({
 })
 
 interface PrevState {
-    success: boolean
     errorMessage: string
 }
 
