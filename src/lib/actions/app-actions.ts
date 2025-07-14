@@ -35,7 +35,7 @@ export async function createProject(prevState:PrevState, formData: FormData) {
     // validate the formdata using zod schema that is generated from the database schema
     if (!projectSchema.safeParse(newRawData).success) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: "Invalid data"
         }
     }
@@ -48,12 +48,12 @@ export async function createProject(prevState:PrevState, formData: FormData) {
         revalidatePath("/dashboard")
 
         return {
-            success: true,
-            errorMessage: ""
+            ...prevState,
+            success: true
         }
     } catch (error) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: error as string
         }
     }
@@ -74,7 +74,7 @@ export async function createJob(prevState: PrevState, formData: FormData) {
     // validate the formdata using zod schema that is generated from the database schema
     if (!jobInsertSchema.safeParse(newRawData).success) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: "Invalid data"
         }
     }
@@ -86,12 +86,12 @@ export async function createJob(prevState: PrevState, formData: FormData) {
         revalidatePath("/jobs")
         revalidatePath("/dashboard")
         return {
-            success: true,
-            errorMessage: ""
+            ...prevState,
+            success: true
         }
     } catch (error) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: error as string
         }
     }
@@ -111,7 +111,7 @@ export async function createEvent(prevState: PrevState, formData: FormData) {
     // validate the formdata using zod schema that is generated from the database schema
     if (!eventInsertSchema.safeParse(newRawData).success) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: "Invalid data"
         }
     }
@@ -123,12 +123,12 @@ export async function createEvent(prevState: PrevState, formData: FormData) {
         revalidatePath("/calendar")
         revalidatePath("/dashboard")
         return {
-            success: true,
-            errorMessage: ""
+            ...prevState,
+            success: true
         }
     } catch (error) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: error as string
         }
     }
