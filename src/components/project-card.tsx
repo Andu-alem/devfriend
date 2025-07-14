@@ -12,6 +12,8 @@ import {
 import { StatusBadge } from "./project-status-badge"
 import { type Project } from "@/db/db-types"
 import { Badge } from "./ui/badge"
+import { EditProjectDialog } from "./edit-project-dialog"
+import { DeleteDataDialog } from './delete-data-dialog';
 
 export function ProjectCard({
     project,
@@ -40,12 +42,16 @@ function VerticalProjectCard({
                         <StatusBadge projectStatus={project.status} />
                     </div>
                     <div className="flex gap-1">
-                        <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <EditProjectDialog project={project}>
+                            <Button variant="ghost" size="sm">
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                        </EditProjectDialog>
+                        <DeleteDataDialog id={project.id} type="project">
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </DeleteDataDialog>
                     </div>
                 </div>
             </CardHeader>
@@ -139,16 +145,20 @@ function HorizontalProjectCard({
                                 </a>
                             </Button>
                         )}
-                        <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-destructive hover:text-destructive bg-transparent"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <EditProjectDialog project={project}>
+                            <Button variant="outline" size="sm">
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                        </EditProjectDialog>
+                        <DeleteDataDialog id={project.id} type="project">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-destructive hover:text-destructive bg-transparent"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </DeleteDataDialog>
                     </div>
                 </div>
             </CardContent>
