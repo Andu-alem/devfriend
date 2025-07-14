@@ -1,13 +1,12 @@
 "use client"
 
-import { Bell, Moon, Sun, User, Menu } from "lucide-react"
+import { Moon, Sun, User, Menu } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useState } from "react"
 import { useSession, signOut } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { MobileSidebar } from "./mobile-sidebar"
 import { useRouter } from "next/navigation"
@@ -43,14 +42,6 @@ export function TopBar() {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-4 w-4" />
-            <Badge className="absolute -top-1 -right-1 h-4 w-4 md:h-5 md:w-5 rounded-full p-0 text-xs flex items-center justify-center">
-              3
-            </Badge>
-            <span className="sr-only">Notifications</span>
-          </Button>
-
           <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
