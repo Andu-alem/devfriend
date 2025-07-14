@@ -10,15 +10,20 @@ import { projects } from "@/db/schema/projects-schema";
 import { jobs } from "@/db/schema/jobs-schema";
 import { events } from "@/db/schema/events-schema";
 
+interface PrevState {
+    success: boolean
+    errorMessage: string
+}
 
-export async function deleteProject(projectId:number) {
+export async function deleteProject(prevState: PrevState, formData: FormData) {
     const authData = await auth.api.getSession({
         headers: await headers()
     })
+    const projectId = Number(formData.get("id"))
 
     if (!authData) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: "Unauthorized user"
         }
     }
@@ -30,72 +35,74 @@ export async function deleteProject(projectId:number) {
         revalidatePath("/dashboard")
 
         return {
-            success: true,
-            errorMessage: ""
+            ...prevState,
+            success: true
         }
     } catch (error) {
         return {
-            succes: false,
+            ...prevState,
             errorMessage: error as string
         }
     }
 }
 
-export async function deleteJob(projectId:number) {
+export async function deleteJob(prevState: PrevState, formData: FormData) {
     const authData = await auth.api.getSession({
         headers: await headers()
     })
+    const jobId = Number(formData.get("id"))
 
     if (!authData) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: "Unauthorized user"
         }
     }
 
     try {
-        await db.delete(jobs).where(eq(jobs.id, projectId))
+        await db.delete(jobs).where(eq(jobs.id, jobId))
 
         revalidatePath("/jobs")
         revalidatePath("/dashboard")
 
         return {
-            success: true,
-            errorMessage: ""
+            ...prevState,
+            success: true
         }
     } catch (error) {
         return {
-            succes: false,
+            ...prevState,
             errorMessage: error as string
         }
     }
 }
 
-export async function deleteEvent(projectId:number) {
+export async function deleteEvent(prevState: PrevState, formData: FormData) {
     const authData = await auth.api.getSession({
         headers: await headers()
     })
+    const eventId = Number(formData.get("id"))
 
     if (!authData) {
         return {
-            success: false,
+            ...prevState,
             errorMessage: "Unauthorized user"
         }
     }
 
     try {
-        await db.delete(events).where(eq(events.id, projectId))
+        await db.delete(events).where(eq(events.id, eventId))
 
         revalidatePath("/calendar")
         revalidatePath("/dashboard")
 
         return {
-            success: true,
-            errorMessage: ""
+            ...prevState,
+            success: true
         }
     } catch (error) {
         return {
-            succes: false,
+            ...prevState,
             errorMessage: error as string
         }
     }
