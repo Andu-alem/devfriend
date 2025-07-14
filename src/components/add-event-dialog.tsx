@@ -98,6 +98,7 @@ export function AddEventDialog({ children }:{ children: React.ReactNode }) {
                 id="time"
                 type="time"
                 name="time"
+                required
               />
             </div>
           </div>
@@ -146,6 +147,7 @@ export function AddEventDialog({ children }:{ children: React.ReactNode }) {
               name="description"
               placeholder="Additional notes or details..."
               rows={3}
+              required
             />
           </div>
 
