@@ -2,14 +2,38 @@
 
 import { AlertCircle, CalendarIcon, CheckCircle, Clock, Users } from "lucide-react";
 import { UpcomingEvent } from "./upcoming-event";
-import { type Event } from "@/db/db-types";
+import { type Event, type Project, type Job } from "@/db/db-types";
 import { RecentActivities } from "./recent-activities";
 
 export function BottomDashboardRow({
-    events
+    events,
+    projects,
+    jobs
 }:{
-    events: Event[]
+    events: Event[],
+    projects: Project[],
+    jobs: Job[]
 }) {
+    const recentActivities = [
+        {
+            action: "Project added",
+            title: projects[0].title,
+            date: (new Date(projects[0].createdAt)).toISOString(),
+            type: "Project"
+        },
+        {
+            action: "Job added",
+            title: jobs[0].title,
+            date: (new Date(jobs[0].createdAt)).toISOString(),
+            type: "Job"
+        },
+        {
+            action: "Event added",
+            title: events[0].title,
+            date: (new Date(events[0].createdAt)).toISOString(),
+            type: "Event"
+        }
+    ]
     const getEventIcon = (type: string) => {
         switch (type) {
         case "interview":
@@ -49,7 +73,7 @@ export function BottomDashboardRow({
             />
     
             {/* Recent Activity */}
-            <RecentActivities />
+            <RecentActivities recentActivities={ recentActivities } />
         </div>
     )
 }
