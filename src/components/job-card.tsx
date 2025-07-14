@@ -17,6 +17,8 @@ import {
 import { Badge } from "./ui/badge";
 import { StatusBadge } from "./job-status-badge";
 import { type Job } from "@/db/db-types";
+import { EditJobDialog } from "./edit-job-dialog";
+import { DeleteDataDialog } from "./delete-data-dialog";
 
 
 export function JobCard({
@@ -90,16 +92,20 @@ function ListModeCard({
                                 </a>
                             </Button>
                         )}
-                        <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-destructive hover:text-destructive bg-transparent"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <EditJobDialog job={ job }>
+                            <Button variant="outline" size="sm">
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                        </EditJobDialog>
+                        <DeleteDataDialog id={job.id} type="job">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-destructive hover:text-destructive bg-transparent"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </DeleteDataDialog>
                     </div>
                 </div>
             </CardContent>
@@ -153,16 +159,20 @@ function KanbanJobCard({
                             </a>
                         </Button>
                     )}
-                    <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-destructive hover:text-destructive bg-transparent"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <EditJobDialog job={ job }>
+                        <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4" />
+                        </Button>
+                    </EditJobDialog>
+                    <DeleteDataDialog id={job.id} type="job">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive hover:text-destructive bg-transparent"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </DeleteDataDialog>
                 </div>
             </div>
         </Card>
