@@ -1,5 +1,5 @@
-import { Code } from "lucide-react";
 import Link from "next/link";
+import { AppLogo } from "./app-logo";
 
 export function FooterSection() {
     return (
@@ -8,9 +8,7 @@ export function FooterSection() {
                 <div className="grid md:grid-cols-4 gap-8">
                     <div className="col-span-2">
                         <div className="flex items-center space-x-2 mb-4">
-                            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                                <Code className="h-5 w-5 text-white" />
-                            </div>
+                            <AppLogo />
                             <span className="text-xl font-bold">DevFriend</span>
                         </div>
                         <p className="text-muted-foreground mb-4">
@@ -23,11 +21,6 @@ export function FooterSection() {
                             <li>
                                 <Link href="#features" className="hover:text-foreground transition-colors">
                                     Features
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#pricing" className="hover:text-foreground transition-colors">
-                                    Pricing
                                 </Link>
                             </li>
                             <li>
