@@ -31,8 +31,6 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
     })
 
     if (!validateData.success) {
-        
-        console.log("Validation error has occcured here bro")
         return {
             errorMessage: "Invalid data"
         }
@@ -46,7 +44,7 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
                 password: password as string
             }
         })
-        return prevState
+        redirect("/dashboard")
     } catch (error) {
         if (error instanceof APIError) {
             switch(error.status) {
@@ -56,7 +54,7 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
                     }
                 case "BAD_REQUEST":
                     return {
-                        errorMessage: "Inalid Credentials."
+                        errorMessage: "Invalid Credentials."
                     }
                 default: 
                     return {
@@ -69,8 +67,6 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
             }
         }
     }
-
-    redirect("/dashboard")
 }
 
 export async function loginUser(prevState:PrevState, formData: FormData) {
@@ -95,7 +91,7 @@ export async function loginUser(prevState:PrevState, formData: FormData) {
                 password: password as string
             }
         })
-        return prevState
+        redirect("/dashboard")
     } catch(error) {
         if (error instanceof APIError) {
             switch(error.status) {
@@ -105,7 +101,7 @@ export async function loginUser(prevState:PrevState, formData: FormData) {
                     }
                 case "BAD_REQUEST":
                     return {
-                        errorMessage: "Inalid Credentials."
+                        errorMessage: "Invalid Credentials."
                     }
                 default: 
                     return {
@@ -118,6 +114,4 @@ export async function loginUser(prevState:PrevState, formData: FormData) {
             }
         }
     }
-
-    redirect("/dashboard")
 }
