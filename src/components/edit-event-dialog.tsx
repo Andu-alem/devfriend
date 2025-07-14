@@ -46,7 +46,7 @@ export function EditEventDialog({
         if (errorMessage.length > 0) {
             toast.error(errorMessage)
         } else {
-            toast.success("Event added successfully!!!")
+            toast.success("Event updated successfully!!!")
             setOpen(false)
             if (pathName.includes("calendar")){
                 router.refresh()

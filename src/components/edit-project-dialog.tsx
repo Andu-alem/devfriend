@@ -50,7 +50,7 @@ export function EditProjectDialog({
         if (errorMessage.length > 0) {
             toast.error(errorMessage)
         } else {
-            toast.success("Project added successfully!!!")
+            toast.success("Project updated successfully!!!")
             setOpen(false)
             if (pathName.includes("projects")){
                 router.refresh()

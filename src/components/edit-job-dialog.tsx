@@ -50,7 +50,7 @@ export function EditJobDialog({
         if (errorMessage.length > 0) {
             toast.error(errorMessage)
         } else {
-            toast.success("Job added successfully!!!")
+            toast.success("Job updated successfully!!!")
             setOpen(false)
             if (pathName.includes("jobs")){
                 router.refresh()
