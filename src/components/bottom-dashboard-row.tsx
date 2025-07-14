@@ -18,19 +18,19 @@ export function BottomDashboardRow({
         projects[0] && {
             action: "Project added",
             title: projects[0].title,
-            date: (new Date(projects[0].createdAt)).toISOString(),
+            date: (new Date(projects[0].createdAt)).toLocaleDateString(),
             type: "Project"
         },
         jobs[0] && {
             action: "Job added",
             title: jobs[0].title,
-            date: (new Date(jobs[0].createdAt)).toISOString(),
+            date: (new Date(jobs[0].createdAt)).toLocaleDateString(),
             type: "Job"
         },
         events[0] && {
             action: "Event added",
             title: events[0].title,
-            date: (new Date(events[0].createdAt)).toISOString(),
+            date: (new Date(events[0].createdAt)).toLocaleDateString(),
             type: "Event"
         }
     ].filter(Boolean);
