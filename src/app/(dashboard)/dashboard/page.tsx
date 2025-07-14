@@ -47,6 +47,24 @@ async function getAllEvents(cookieHeader: string) {
   return res.json()
 }
 
+async function getAllProjects(cookieHeader: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`, {
+    headers: { Cookie: cookieHeader },
+    cache: 'force-cache',
+  })
+
+  return res.json()
+}
+async function getAllJobs(cookieHeader: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs`, {
+    headers: { Cookie: cookieHeader },
+    cache: 'force-cache',
+  })
+
+  return res.json()
+}
+
+
 export default async function Page() {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore
@@ -61,11 +79,13 @@ export default async function Page() {
     redirect("/login")
   }
   
-  const [jobsSummary, projectsSummary, eventsSummary, events] = await Promise.all([
+  const [jobsSummary, projectsSummary, eventsSummary, events, projects, jobs] = await Promise.all([
     getJobsSummary(cookieHeader),
     getProjectsSummary(cookieHeader),
     getEventsSummary(cookieHeader),
-    getAllEvents(cookieHeader)
+    getAllEvents(cookieHeader),
+    getAllProjects(cookieHeader),
+    getAllJobs(cookieHeader),
   ])
 
   return (
@@ -85,7 +105,7 @@ export default async function Page() {
         </Suspense>
       </div>
       <Suspense fallback={(<div>Loading....</div>)}>
-        <BottomDashboardRow events={events} />
+        <BottomDashboardRow events={events} jobs={jobs} projects={projects} />
       </Suspense>
     </div>
   )
