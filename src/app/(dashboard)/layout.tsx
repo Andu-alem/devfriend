@@ -1,6 +1,13 @@
 import type React from "react"
+import type { Metadata } from "next"
+
 import { AppSidebar } from "@/components/app-sidebar"
 import { TopBar } from "@/components/top-bar"
+
+export const metadata: Metadata = {
+  title: "DevFriend - Dashboard",
+  description: "Track your job applications and personal projects in one place"
+}
 
 export default function DashboardLayout({
   children,

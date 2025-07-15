@@ -9,8 +9,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "DevFriend - Developer Job & Project Tracker",
-  description: "Track your job applications and personal projects in one place",
-    generator: 'v0.dev'
+  description: "Track your job applications and personal projects in one place"
 }
 
 export default function RootLayout({
