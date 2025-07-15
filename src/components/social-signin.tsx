@@ -1,36 +1,39 @@
 "use client"
 
-import { useEffect, useState } from "react";
 import { signIn } from "@/lib/auth-client";
 import { GoogleLogo } from "./google-logo";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function SocialSignIn() {
-    const [error, setError] = useState(false)
+    const router = useRouter()
 
-    useEffect(() => {
-        if (error) {
-            toast.error("Something went wrong, please try again")
-        }
-    }, [error])
     const googleSignIn = async () => {
-        const data = await signIn.social({
+        await signIn.social({
             provider: 'google',
-            callbackURL: "/dashboard"
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/dashboard")
+                },
+                onError: () => {
+                    toast.error("Something went wrong, please try again")
+                }
+            }
         })
-        if (data.error) {
-            setError(true)
-        }
     }
     const githubSignIn = async () => {
-        const data = await signIn.social({
+        await signIn.social({
             provider: 'github',
-            callbackURL: "/dashboard"
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/dashboard")
+                },
+                onError: () => {
+                    toast.error("Something went wrong, please try again")
+                }
+            }
         })
-        if (data.error) {
-            setError(true)
-        }
     }
 
     return (
