@@ -1,5 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import { AppSidebar } from "@/components/app-sidebar"
 import { TopBar } from "@/components/top-bar"
@@ -9,11 +12,18 @@ export const metadata: Metadata = {
   description: "Track your job applications and personal projects in one place"
 }
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+  if(!session) {
+    redirect("/login")
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar />
