@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { GoogleLogo } from "@/components/google-logo";
 import Link from "next/link";
 import { signupUser } from "@/lib/actions/auth-actions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { AppLogo } from "./app-logo";
+import { SocialSignIn } from "./social-signin";
 
 export function SignUpForm() {
   const initialState = {
@@ -29,7 +29,7 @@ export function SignUpForm() {
       <div className="max-w-xs w-full flex flex-col items-center">
         <AppLogo />
         <p className="mt-4 text-xl font-bold tracking-tight">
-          Sign up for DevFriend
+          Sign up to DevFriend
         </p>
         <form
             className="w-full space-y-4 mt-5"
@@ -83,10 +83,7 @@ export function SignUpForm() {
             <span className="text-sm px-2">OR</span>
           <Separator />
         </div>
-        <Button className="w-full gap-3">
-          <GoogleLogo />
-          Continue with Google
-        </Button>
+        <SocialSignIn />
 
         <p className="mt-5 text-sm text-center">
           Already have an account?

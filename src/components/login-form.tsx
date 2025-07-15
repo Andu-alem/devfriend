@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { GoogleLogo } from "@/components/google-logo";
 import Link from "next/link";
 import { loginUser } from "@/lib/actions/auth-actions";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { AppLogo } from "./app-logo";
+import { SocialSignIn } from "./social-signin";
 
 
 export function LoginForm() {
@@ -72,10 +72,7 @@ export function LoginForm() {
             <span className="text-sm px-2">OR</span>
           <Separator />
         </div>
-        <Button className="w-full gap-3">
-          <GoogleLogo />
-          Continue with Google
-        </Button>
+        <SocialSignIn />
 
         <p className="mt-5 text-sm text-center">
           Don&apos;t you have an account?
