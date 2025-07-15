@@ -3,9 +3,6 @@ import { Suspense } from "react";
 import { ProjectsList } from "@/components/proects-list";
 
 import { Project } from "@/db/db-types";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export default async function Page() {
@@ -14,13 +11,6 @@ export default async function Page() {
     .getAll()
     .map((c) => `${c.name}=${c.value}`)
     .join("; ")
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
-
-  if(!session) {
-    redirect("/login")
-  }
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`, {
     headers: { Cookie: cookieHeader },

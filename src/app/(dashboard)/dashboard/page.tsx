@@ -1,8 +1,5 @@
 import { Suspense } from "react";
 
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 import { DashboardHomeHeader } from "@/components/dashboard-home-header";
@@ -71,13 +68,6 @@ export default async function Page() {
     .getAll()
     .map((c) => `${c.name}=${c.value}`)
     .join("; ")
-
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
-  if(!session) {
-    redirect("/login")
-  }
   
   const [jobsSummary, projectsSummary, eventsSummary, events, projects, jobs] = await Promise.all([
     getJobsSummary(cookieHeader),
