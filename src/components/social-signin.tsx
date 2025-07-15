@@ -16,7 +16,8 @@ export function SocialSignIn() {
     }, [error])
     const googleSignIn = async () => {
         const data = await signIn.social({
-            provider: 'google'
+            provider: 'google',
+            callbackURL: "/dashboard"
         })
         if (data.error) {
             setError(true)
@@ -24,7 +25,8 @@ export function SocialSignIn() {
     }
     const githubSignIn = async () => {
         const data = await signIn.social({
-            provider: 'github'
+            provider: 'github',
+            callbackURL: "/dashboard"
         })
         if (data.error) {
             setError(true)
