@@ -31,8 +31,6 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
     })
 
     if (!validateData.success) {
-        
-        console.log("Validation error has occcured here bro")
         return {
             errorMessage: "Invalid data"
         }
@@ -55,7 +53,7 @@ export async function signupUser(prevState:PrevState, formData: FormData) {
                     }
                 case "BAD_REQUEST":
                     return {
-                        errorMessage: "Inalid Credentials."
+                        errorMessage: "Invalid Credentials."
                     }
                 default: 
                     return {
@@ -99,11 +97,11 @@ export async function loginUser(prevState:PrevState, formData: FormData) {
             switch(error.status) {
                 case "UNPROCESSABLE_ENTITY":
                     return {
-                        errorMessage: "User already exists."
+                        errorMessage: "User not found."
                     }
                 case "BAD_REQUEST":
                     return {
-                        errorMessage: "Inalid Credentials."
+                        errorMessage: "Invalid Credentials."
                     }
                 default: 
                     return {
