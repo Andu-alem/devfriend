@@ -4,35 +4,29 @@ import { signIn } from "@/lib/auth-client";
 import { GoogleLogo } from "./google-logo";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 export function SocialSignIn() {
-    const router = useRouter()
 
     const googleSignIn = async () => {
         await signIn.social({
             provider: 'google',
             fetchOptions: {
-                onSuccess: () => {
-                    router.push("/dashboard")
-                },
                 onError: () => {
                     toast.error("Something went wrong, please try again")
                 }
-            }
+            },
+            callbackURL: '/dashboard',
         })
     }
     const githubSignIn = async () => {
         await signIn.social({
             provider: 'github',
             fetchOptions: {
-                onSuccess: () => {
-                    router.push("/dashboard")
-                },
                 onError: () => {
                     toast.error("Something went wrong, please try again")
                 }
-            }
+            },
+            callbackURL: '/dashboard',
         })
     }
 
