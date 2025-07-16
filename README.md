@@ -2,6 +2,9 @@
 
 DevFriend is a **full-stack productivity web app** for developers to organize their **job applications, personal projects, and important events in one place**, helping them stay focused while managing their career journey.
 
+[DevFriend Live Link](https://devfriend-one.vercel.app)
+
+
 ---
 
 ## 🚀 Features
@@ -57,6 +60,8 @@ DevFriend is a **full-stack productivity web app** for developers to organize th
 ---
 
 ## 📸 Screenshots
+
+![Screenshot](public/devfriend.png)
 
 
 ---
