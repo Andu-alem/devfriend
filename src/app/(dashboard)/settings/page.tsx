@@ -1,15 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Github, Calendar, Bell, Palette, Shield, User } from "lucide-react"
+import { Github, Calendar, Bell, Shield, User } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
 export default function SettingsPage() {
   const [notifications, setNotifications] = useState({
@@ -33,11 +33,14 @@ export default function SettingsPage() {
 
       <div className="grid gap-6">
         {/* Profile Settings */}
-        <Card>
+        <Card className="bg-secondary border-blue-300">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Profile
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                Profile
+              </div>
+              <Badge className="bg-blue-200 text-blue-500">Comming Soon</Badge>
             </CardTitle>
             <CardDescription>Update your profile information and preferences</CardDescription>
           </CardHeader>
@@ -71,51 +74,19 @@ export default function SettingsPage() {
               <Input id="email" type="email" placeholder="john@example.com" />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea id="bio" placeholder="Tell us about yourself..." className="min-h-[100px]" />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Theme Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="h-5 w-5" />
-              Appearance
-            </CardTitle>
-            <CardDescription>Customize the look and feel of your dashboard</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">Toggle between light and dark themes</p>
-              </div>
-              <Switch />
-            </div>
-
-            <Separator />
-
-            <div className="space-y-2">
-              <Label>Color Theme</Label>
-              <div className="flex gap-2">
-                <div className="w-8 h-8 rounded-full bg-blue-500 cursor-pointer ring-2 ring-blue-500 ring-offset-2" />
-                <div className="w-8 h-8 rounded-full bg-green-500 cursor-pointer" />
-                <div className="w-8 h-8 rounded-full bg-purple-500 cursor-pointer" />
-                <div className="w-8 h-8 rounded-full bg-orange-500 cursor-pointer" />
-              </div>
-            </div>
+            <Button disabled>Update Profile</Button>
           </CardContent>
         </Card>
 
         {/* Notification Settings */}
-        <Card>
+        <Card className="bg-secondary border-blue-300">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5" />
-              Notifications
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bell className="h-5 w-5" />
+                Notifications
+              </div>
+              <Badge className="bg-blue-200 text-blue-500">Comming Soon</Badge>
             </CardTitle>
             <CardDescription>Configure how you want to be notified</CardDescription>
           </CardHeader>
@@ -128,6 +99,7 @@ export default function SettingsPage() {
               <Switch
                 checked={notifications.interviews}
                 onCheckedChange={(checked) => setNotifications((prev) => ({ ...prev, interviews: checked }))}
+                disabled
               />
             </div>
 
@@ -139,6 +111,7 @@ export default function SettingsPage() {
               <Switch
                 checked={notifications.deadlines}
                 onCheckedChange={(checked) => setNotifications((prev) => ({ ...prev, deadlines: checked }))}
+                disabled
               />
             </div>
 
@@ -150,6 +123,7 @@ export default function SettingsPage() {
               <Switch
                 checked={notifications.followups}
                 onCheckedChange={(checked) => setNotifications((prev) => ({ ...prev, followups: checked }))}
+                disabled
               />
             </div>
 
@@ -163,15 +137,21 @@ export default function SettingsPage() {
               <Switch
                 checked={notifications.email}
                 onCheckedChange={(checked) => setNotifications((prev) => ({ ...prev, email: checked }))}
+                disabled
               />
             </div>
+
+            <Button disabled>Save Updates</Button>
           </CardContent>
         </Card>
 
         {/* Integrations */}
-        <Card>
+        <Card className="bg-secondary border-blue-300">
           <CardHeader>
-            <CardTitle>Integrations</CardTitle>
+            <CardTitle className="flex items-center justify-between">
+              <span>Integrations</span>
+              <Badge className="bg-blue-200 text-blue-500">Comming Soon</Badge>
+            </CardTitle>
             <CardDescription>Connect your external accounts and services</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -186,6 +166,7 @@ export default function SettingsPage() {
               <Button
                 variant={integrations.github ? "destructive" : "default"}
                 onClick={() => setIntegrations((prev) => ({ ...prev, github: !prev.github }))}
+                disabled
               >
                 {integrations.github ? "Disconnect" : "Connect"}
               </Button>
@@ -202,6 +183,7 @@ export default function SettingsPage() {
               <Button
                 variant={integrations.googleCalendar ? "destructive" : "default"}
                 onClick={() => setIntegrations((prev) => ({ ...prev, googleCalendar: !prev.googleCalendar }))}
+                disabled
               >
                 {integrations.googleCalendar ? "Disconnect" : "Connect"}
               </Button>
@@ -210,11 +192,14 @@ export default function SettingsPage() {
         </Card>
 
         {/* Security */}
-        <Card>
+        <Card className="bg-secondary border-blue-300">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Security
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                Security
+              </div>
+              <Badge className="bg-blue-200 text-blue-500">Comming Soon</Badge>
             </CardTitle>
             <CardDescription>Manage your account security settings</CardDescription>
           </CardHeader>
@@ -234,14 +219,9 @@ export default function SettingsPage() {
               <Input id="confirmPassword" type="password" />
             </div>
 
-            <Button>Update Password</Button>
+            <Button disabled>Update Password</Button>
           </CardContent>
         </Card>
-
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button size="lg">Save Changes</Button>
-        </div>
       </div>
     </div>
   )
